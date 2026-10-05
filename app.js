@@ -9,8 +9,16 @@ const formMessage = document.querySelector("#formMessage");
 const taskList = document.querySelector("#taskList");
 const emptyState = document.querySelector("#emptyState");
 const statusMessage = document.querySelector("#statusMessage");
+const searchInput = document.querySelector("#searchInput");
+const filterButtons = document.querySelectorAll("[data-filter]");
+const clearCompletedButton = document.querySelector("#clearCompletedButton");
+const totalCount = document.querySelector("#totalCount");
+const activeCount = document.querySelector("#activeCount");
+const completedCount = document.querySelector("#completedCount");
 
 let tasks = [];
+let currentFilter = "all";
+let searchTerm = "";
 
 const priorityLabels = {
   low: "Alacsony",
@@ -84,9 +92,31 @@ function createTaskElement(task) {
   return item;
 }
 
+function getVisibleTasks() {
+  return tasks.filter((task) => {
+    const matchesStatus =
+      currentFilter === "all" ||
+      (currentFilter === "active" && !task.completed) ||
+      (currentFilter === "completed" && task.completed);
+
+    const normalizedTitle = task.title.toLocaleLowerCase("hu-HU");
+    const matchesSearch = normalizedTitle.includes(searchTerm);
+    return matchesStatus && matchesSearch;
+  });
+}
+
+function updateStatistics() {
+  const completed = tasks.filter((task) => task.completed).length;
+  totalCount.textContent = String(tasks.length);
+  activeCount.textContent = String(tasks.length - completed);
+  completedCount.textContent = String(completed);
+}
+
 function renderTasks() {
-  taskList.replaceChildren(...tasks.map(createTaskElement));
-  emptyState.classList.toggle("is-hidden", tasks.length > 0);
+  const visibleTasks = getVisibleTasks();
+  taskList.replaceChildren(...visibleTasks.map(createTaskElement));
+  emptyState.classList.toggle("is-hidden", visibleTasks.length > 0);
+  updateStatistics();
 }
 
 function showFormMessage(message) {
@@ -136,6 +166,38 @@ taskList.addEventListener("click", function (event) {
     showStatus("A feladat törölve.");
   }
 
+  renderTasks();
+});
+
+filterButtons.forEach((button) => {
+  button.addEventListener("click", function () {
+    currentFilter = button.dataset.filter;
+
+    filterButtons.forEach((item) => {
+      const selected = item === button;
+      item.classList.toggle("is-active", selected);
+      item.setAttribute("aria-pressed", String(selected));
+    });
+
+    renderTasks();
+  });
+});
+
+searchInput.addEventListener("input", function () {
+  searchTerm = searchInput.value.trim().toLocaleLowerCase("hu-HU");
+  renderTasks();
+});
+
+clearCompletedButton.addEventListener("click", function () {
+  const completedBeforeDelete = tasks.filter((task) => task.completed).length;
+
+  if (completedBeforeDelete === 0) {
+    showStatus("Nincs törölhető, kész feladat.");
+    return;
+  }
+
+  tasks = tasks.filter((task) => !task.completed);
+  showStatus(`${completedBeforeDelete} kész feladat törölve.`);
   renderTasks();
 });
 
