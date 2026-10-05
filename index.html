@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="hu">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="StudyFlow tanulási feladatkezelő JavaScript, Bootstrap és Git gyakorlásához."
+    >
+    <title>StudyFlow - tanulási feladatkezelő</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <p class="eyebrow">JavaScript + Bootstrap + Git projekt</p>
+        <h1>StudyFlow</h1>
+        <p class="lead">Tervezd meg, kövesd és fejezd be a tanulási feladataidat!</p>
+      </div>
+    </header>
+
+    <main class="container page-grid">
+      <section class="panel" aria-labelledby="newTaskTitle">
+        <h2 id="newTaskTitle">Új feladat</h2>
+        <form id="taskForm" novalidate>
+          <div class="form-field form-field--wide">
+            <label for="taskTitle">Feladat címe</label>
+            <input
+              id="taskTitle"
+              name="taskTitle"
+              type="text"
+              maxlength="80"
+              placeholder="Például: DOM eseménykezelés gyakorlása"
+              required
+            >
+          </div>
+
+          <div class="form-field">
+            <label for="taskCategory">Kategória</label>
+            <select id="taskCategory" name="taskCategory" required>
+              <option value="JavaScript">JavaScript</option>
+              <option value="Bootstrap">Bootstrap</option>
+              <option value="Git">Git</option>
+              <option value="Tesztelés">Tesztelés</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="taskPriority">Prioritás</label>
+            <select id="taskPriority" name="taskPriority" required>
+              <option value="low">Alacsony</option>
+              <option value="medium" selected>Közepes</option>
+              <option value="high">Magas</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="taskDueDate">Határidő</label>
+            <input id="taskDueDate" name="taskDueDate" type="date">
+          </div>
+
+          <div class="form-actions form-field--wide">
+            <button class="button button--primary" type="submit">Feladat hozzáadása</button>
+            <button class="button button--secondary" id="resetFormButton" type="reset">
+              Űrlap törlése
+            </button>
+          </div>
+
+          <p id="formMessage" class="form-message form-field--wide" role="alert"></p>
+        </form>
+      </section>
+
+      <section class="stats-grid" aria-label="Feladatstatisztikák">
+        <article class="stat-card">
+          <span>Összes</span>
+          <strong id="totalCount">0</strong>
+        </article>
+        <article class="stat-card">
+          <span>Aktív</span>
+          <strong id="activeCount">0</strong>
+        </article>
+        <article class="stat-card">
+          <span>Kész</span>
+          <strong id="completedCount">0</strong>
+        </article>
+      </section>
+
+      <section class="panel task-panel" aria-labelledby="taskListTitle">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Áttekintés</p>
+            <h2 id="taskListTitle">Feladatok</h2>
+          </div>
+          <button class="button button--danger" id="clearCompletedButton" type="button">
+            Kész feladatok törlése
+          </button>
+        </div>
+
+        <div class="toolbar">
+          <div class="form-field search-field">
+            <label for="searchInput">Keresés</label>
+            <input id="searchInput" type="search" placeholder="Keresés a címben...">
+          </div>
+
+          <div class="filter-group" role="group" aria-label="Állapotszűrő">
+            <button class="filter-button is-active" type="button" data-filter="all">Mind</button>
+            <button class="filter-button" type="button" data-filter="active">Aktív</button>
+            <button class="filter-button" type="button" data-filter="completed">Kész</button>
+          </div>
+        </div>
+
+        <p id="statusMessage" class="visually-hidden" role="status" aria-live="polite"></p>
+        <p id="emptyState" class="empty-state">Még nincs megjeleníthető feladat.</p>
+        <ul id="taskList" class="task-list" aria-label="Tanulási feladatok"></ul>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <p>StudyFlow gyakorlóprojekt - HTML, CSS, JavaScript, Bootstrap és Git</p>
+      </div>
+    </footer>
+  </body>
+</html>
